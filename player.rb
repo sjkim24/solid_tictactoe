@@ -1,5 +1,5 @@
 class Player
-  attr_reader :mark
+  attr_accessor :mark
   
   def initialize(mark)
     @mark = mark

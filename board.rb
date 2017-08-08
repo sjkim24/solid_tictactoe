@@ -1,22 +1,19 @@
 class Board
-  attr_accessor :rows
+  attr_accessor :rows, :size
   
-  def initialize
-    #set up default 3x3 board
-    @rows = Array.new(3) { Array.new(3) }
+  # board size is 3 by default
+  def initialize(size = 3)
+    @size = size
+    @rows = Array.new(size) { Array.new(size) }
   end
   
-  # self[0][1] is same as self.[]([0][1])
   def [](pos)
-    # byebug
     row, col = pos
     
     @rows[row][col]
   end
-  # 
+
   def []=(pos, mark)
-    raise "Mark is already placed there!" unless empty?(pos)
-    
     row, col = pos
     @rows[row][col] = mark
   end
@@ -33,16 +30,7 @@ class Board
     coords
   end
   
-  # display nil as number from 1 - 9
   def print_board
-    # pretty_rows = @rows.each_with_index.map do |row, idx_1|
-    #   row.each_with_index.map do |mark, idx_2|
-    #     # (idx_1 + 1) * (idx_2 + 1) is wrong algo
-    #     mark.nil? ? (idx_1 + 1) * (idx_2 + 1) : mark
-    #   end
-    # end
-    # 
-    # pretty_rows.each { |row| p row }
     @rows.each { |row| p row }
   end
   
@@ -54,31 +42,39 @@ class Board
     won? || tied?
   end
   
+  # get all columns in horizontal format
   def cols
-  cols = [[], [], []]
+    cols = Array.new(@size) { Array.new(@size) }
 
-  @rows.each do |row|
-    row.each_with_index do |mark, col_idx|
-      cols[col_idx] << mark
+    @rows.each do |row|
+      row.each_with_index do |mark, col_idx|
+        cols[col_idx] << mark
+      end
     end
-  end
 
     cols
   end
-
+  
+  # get all diagonals in horizontal format
   def diagonals
-    down_diag = [[0, 0], [1, 1], [2, 2]]
-    up_diag = [[0, 2], [1, 1], [2, 0]]
+    down_diag = []
+    up_diag = []
+    
+    0.upto(@size - 1) do |idx|
+      down_diag << [idx, idx]
+      up_diag << [idx, @size - 1 - idx]
+    end
 
     [down_diag, up_diag].map do |diag|
       diag.map { |pos| self[pos] }
     end
   end
   
+  # check each formatted row (3 rows), cols (3 cols) and diagonals (2 diagonals)
   def winner
-    (@rows + cols + diagonals).each do |triple|
-      return :x if triple == [:x, :x, :x]
-      return :o if triple == [:o, :o, :o]
+    (@rows + cols + diagonals).each do |row|
+      return :x if row == [:x] * @size
+      return :o if row == [:o] * @size
     end
     
     nil
@@ -95,6 +91,6 @@ class Board
   end
   
   def reset
-    @rows = Array.new(3) { Array.new(3) }
+    @rows = Array.new(@size) { Array.new(@size) }
   end
 end

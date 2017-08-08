@@ -1,5 +1,5 @@
 class ComputerPlayer < Player
-  attr_reader :name, :mark
+  attr_accessor :name, :mark
 
   def initialize(mark)
     super(mark)
@@ -14,7 +14,6 @@ class ComputerPlayer < Player
     row_coord = random_coord[0]
     col_coord = random_coord[1]
     puts "Computer has placed a #{@mark} at #{random_coord}"
-    # byebug
     board[[row_coord, col_coord]] = @mark
   end
   

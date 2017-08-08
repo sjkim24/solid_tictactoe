@@ -8,16 +8,17 @@ require_relative "computer_player"
 class Game
   attr_accessor :board, :human_player, :computer_player, :current_player, :prev_player
   
-  def initialize
-    @board = Board.new
-    @human_player = nil
-    @computer_player = nil
-    @current_player = nil
-    @prev_player = nil
-  end
+  # def initialize
+  #   @board = nil
+  #   @human_player = nil
+  #   @computer_player = nil
+  #   @current_player = nil
+  #   @prev_player = nil
+  # end
   
   def start(reset = false)
-    self.pick_players if !reset
+    self.setup_board_size if !reset
+    self.setup_players if !reset
     self.randomize_order
 
     @board.print_board
@@ -62,8 +63,31 @@ class Game
     self.start(true)
   end
   
+  def setup_board_size
+    puts "Would you like to select a different board size? Default is 3x3 [y/n]"
+    input = gets.chomp
+    
+    until input == "y" || input == "n"
+      puts "You entered #{input}. Please enter y or n. Would you like to select a different board size? [y/n]"
+      input = gets.chomp
+    end
+    
+    if input == "y"
+      puts "Please enter a board size. e.g. enter 5 for 5x5 board"
+      size = gets.chomp
+      until size.to_i.to_s == size
+        puts "You entered #{size}. Please enter a numerical value"
+        size = gets.chomp
+      end
+      
+      @board = Board.new(size.to_i)
+    else
+      @board = Board.new
+    end
+  end
+  
   # get user's name and chice of mark
-  def pick_players
+  def setup_players
     puts "Hello! Welcome to SJ's TIC TAC TOE. What is your name?"
     name = gets.chomp
     puts "Do you prefer O or X?"
