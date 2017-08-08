@@ -15,7 +15,8 @@ class Board
   end
   # 
   def []=(pos, mark)
-    # raise "Mark is already placed there!" unless empty?(pos)
+    raise "Mark is already placed there!" unless empty?(pos)
+    
     row, col = pos
     @rows[row][col] = mark
   end
@@ -34,13 +35,15 @@ class Board
   
   # display nil as number from 1 - 9
   def print_board
-    @rows.each_with_index.map do |row, idx_1|
-      row.each_with_index.map do |mark, idx_2|
-        mark = (idx_1 + 1) * (idx_2 + 1) if mark.nil?
-      end
-      
-      p row
-    end
+    # pretty_rows = @rows.each_with_index.map do |row, idx_1|
+    #   row.each_with_index.map do |mark, idx_2|
+    #     # (idx_1 + 1) * (idx_2 + 1) is wrong algo
+    #     mark.nil? ? (idx_1 + 1) * (idx_2 + 1) : mark
+    #   end
+    # end
+    # 
+    # pretty_rows.each { |row| p row }
+    @rows.each { |row| p row }
   end
   
   def empty?(pos)

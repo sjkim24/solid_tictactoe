@@ -6,13 +6,14 @@ require_relative "human_player"
 require_relative "computer_player"
 
 class Game
-  attr_accessor :board, :human_player, :computer_player, :current_player
+  attr_accessor :board, :human_player, :computer_player, :current_player, :prev_player
   
   def initialize
     @board = Board.new
     @human_player = nil
     @computer_player = nil
     @current_player = nil
+    @prev_player = nil
   end
   
   def start
@@ -25,7 +26,28 @@ class Game
       self.play_turn
     end
     
-    byebug
+    self.end_game
+  end
+  
+  def end_game
+    if @board.won?
+      winning_mark = @board.winner
+      winner = @current_player
+      puts "Congratulation #{@prev_player.name}. You won!"
+    elsif @board.tied?
+      puts "Draw!"
+    end
+    
+    # puts "Would you like to restart the match? [y/n]"
+    # input = gets.chomp
+    # if input == "y"
+      # reset board and restart the game
+    # elsif input == "n"
+      # puts "Thank you for playing!"
+    # else
+      # this should trigger another get input. this entire if statement prob have to change to
+      # while/until loop
+    # end
   end
   
   # get user's name and chice of mark
@@ -64,6 +86,7 @@ class Game
   def play_turn
     @current_player.place_mark(@board)
     self.change_current_player
+    puts ""
     @board.print_board
   end
   
@@ -71,8 +94,10 @@ class Game
   def change_current_player
     if @current_player == @human_player
       @current_player = @computer_player
+      @prev_player = @human_player
     else
       @current_player = @human_player
+      @prev_player = @computer_player
     end
   end
   
