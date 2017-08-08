@@ -18,6 +18,10 @@ class Board
     @rows[row][col] = mark
   end
   
+  def print_board
+    @rows.each { |row| p row }
+  end
+  
   def get_unmarked_coords
     coords = []
     
@@ -30,16 +34,32 @@ class Board
     coords
   end
   
-  def print_board
-    @rows.each { |row| p row }
-  end
-  
   def empty?(pos)
     self[pos].nil?
   end
   
   def game_over?
     won? || tied?
+  end
+  
+  def won?
+    !winner.nil?
+  end
+  
+  def tied?
+    return false if won?
+    
+    @rows.all? { |row| row.all? }
+  end
+  
+  # check each formatted row (3 rows), cols (3 cols) and diagonals (2 diagonals)
+  def winner
+    (@rows + cols + diagonals).each do |row|
+      return :x if row.all? { |mark| mark == :x }
+      return :o if row.all? { |mark| mark == :o }
+    end
+    
+    nil
   end
   
   # get all columns in horizontal format
@@ -60,6 +80,7 @@ class Board
     down_diag = []
     up_diag = []
     
+    # push sets of coordinates that make up both diagonals
     0.upto(@size - 1) do |idx|
       down_diag << [idx, idx]
       up_diag << [idx, @size - 1 - idx]
@@ -68,26 +89,6 @@ class Board
     [down_diag, up_diag].map do |diag|
       diag.map { |pos| self[pos] }
     end
-  end
-  
-  # check each formatted row (3 rows), cols (3 cols) and diagonals (2 diagonals)
-  def winner
-    (@rows + cols + diagonals).each do |row|
-      return :x if row == [:x] * @size
-      return :o if row == [:o] * @size
-    end
-    
-    nil
-  end
-  
-  def won?
-    !winner.nil?
-  end
-  
-  def tied?
-    return false if won?
-    
-    @rows.all? { |row| row.all? }
   end
   
   def reset
