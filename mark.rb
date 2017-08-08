@@ -1,7 +1,8 @@
 class Mark
+  attr_accessor :mark
   
-  def initialize
-    
+  def initialize(mark)
+    @mark = mark
   end
   
 end

@@ -18,33 +18,38 @@ class Game
   def start
     self.pick_players
     self.randomize_order
-    self.place_marks
-    # puts "#{@player_a}"
+
+    @board.print_board
+    
+    until board.game_over?
+      self.play_turn
+    end
+    
     byebug
   end
   
   # get user's name and chice of mark
   def pick_players
-    puts "Hello! Welcome to SJ's SOLID TIC TAC TOE. What is your name?"
+    puts "Hello! Welcome to SJ's TIC TAC TOE. What is your name?"
     name = gets.chomp
     puts "Do you prefer O or X?"
     puts "Please type either O or X and press enter."
     input = gets.chomp.downcase
     
-    until input === "o" || input === "x"
+    until input == "o" || input == "x"
       puts "You have entered #{input}. Please type either O or X and press enter instead."
       input = gets.chomp
     end
     
-    if input.downcase === "o"
+    if input === "o"
       @human_player = HumanPlayer.new(:o, name)
       @computer_player = ComputerPlayer.new(:x)
-    elsif input.downcase === "x"
+    elsif input === "x"
       @human_player = HumanPlayer.new(:x, name)
       @computer_player = ComputerPlayer.new(:o)
     end
 
-    puts "Great! You are #{@human_player.mark.to_s} and Computer is #{@computer_player.mark.to_s}"
+    puts "Great! You are #{human_player.mark.to_s} and Computer is #{computer_player.mark.to_s}"
   end
   
   # randomize the player to make the first move
@@ -56,15 +61,15 @@ class Game
   end
   
   
-  def place_marks
-    @board.print_board
+  def play_turn
     @current_player.place_mark(@board)
     self.change_current_player
+    @board.print_board
   end
   
   # swap the value of @current_player between human and computer
   def change_current_player
-    if @current_player === @human_player
+    if @current_player == @human_player
       @current_player = @computer_player
     else
       @current_player = @human_player

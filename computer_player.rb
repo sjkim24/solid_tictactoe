@@ -13,7 +13,8 @@ class ComputerPlayer < Player
     random_coord = unmarked_coords.shuffle[0]
     row_coord = random_coord[0]
     col_coord = random_coord[1]
-    board.board[row_coord][col_coord] = self.mark
+    # byebug
+    board[[row_coord, col_coord]] = self.mark
   end
   
 end

@@ -13,6 +13,7 @@ class HumanPlayer < Player
     
     row_coord = input[1].to_i
     col_coord = input[3].to_i
-    board.board[row_coord][col_coord] = self.mark
+    # byebug
+    board[[row_coord, col_coord]] = self.mark
   end
 end
