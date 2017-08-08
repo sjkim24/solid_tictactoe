@@ -1,10 +1,3 @@
-require "byebug"
-require_relative "board"
-require_relative "mark"
-require_relative "player"
-require_relative "human_player"
-require_relative "computer_player"
-
 class Game
   attr_accessor :board, :human_player, :computer_player, :current_player, :prev_player
   
@@ -130,6 +123,3 @@ class Game
   end
   
 end
-
-game = Game.new
-game.start
