@@ -93,4 +93,8 @@ class Board
     
     @rows.all? { |row| row.all? }
   end
+  
+  def reset
+    @rows = Array.new(3) { Array.new(3) }
+  end
 end

@@ -16,8 +16,8 @@ class Game
     @prev_player = nil
   end
   
-  def start
-    self.pick_players
+  def start(reset = false)
+    self.pick_players if !reset
     self.randomize_order
 
     @board.print_board
@@ -38,16 +38,28 @@ class Game
       puts "Draw!"
     end
     
-    # puts "Would you like to restart the match? [y/n]"
-    # input = gets.chomp
-    # if input == "y"
-      # reset board and restart the game
-    # elsif input == "n"
-      # puts "Thank you for playing!"
-    # else
-      # this should trigger another get input. this entire if statement prob have to change to
-      # while/until loop
-    # end
+    self.prompt_restart
+  end
+  
+  def prompt_restart
+    puts "Would you like to restart the match? [y/n]"
+    input = gets.chomp
+    
+    until input == "y" || input == "n"
+      puts "Please enter y or n. Would you like to restart the match? [y/n]"
+      inputs = gets.chomp
+    end
+    
+    if input == "y"
+      self.restart_match
+    elsif input == "n"
+      puts "Thank you for playing!"
+    end
+  end
+  
+  def restart_match
+    @board.reset
+    self.start(true)
   end
   
   # get user's name and chice of mark
