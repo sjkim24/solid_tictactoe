@@ -1,4 +1,5 @@
 class Game
+  require "colorize"
   attr_accessor :board, :human_player, :computer_player, :current_player, :prev_player
   
   def start(reset = false)
@@ -15,27 +16,39 @@ class Game
     self.end_game
   end
   
+  def ask_for_input(message)
+    puts "#{message}".colorize(:green)
+    
+    gets.chomp
+  end
+  
   def setup_board_size
-    puts "Would you like to select a different board size? Default is 3x3 [y/n]"
-    input = gets.chomp
-    
-    until input == "y" || input == "n"
-      puts "You entered #{input}. Please enter y or n. Would you like to select a different board size? [y/n]"
-      input = gets.chomp
+    begin
+      puts ""
+      board_size_input = self.ask_for_input("Hello, welcome to Tic to the Tac to the Toe yo. Would you like to select a differnt board size? Default is 3x3  [y/n]")
+      raise ArgumentError.new("Invalid Input!") if (board_size_input != "y" && board_size_input != "n")
+    rescue ArgumentError => e
+      puts e.message.colorize(:red)
+      puts "You entered #{board_size_input}. Please enter y or n."
+      retry
     end
+  
     
-    if input == "y"
-      puts "Please enter a board size. e.g. enter 5 for 5x5 board"
-      size = gets.chomp
-      until size.to_i.to_s == size
-        puts "You entered #{size}. Please enter a numerical value"
-        size = gets.chomp
+    if board_size_input == "y"
+      begin
+        puts ""
+        board_size_num_input = self.ask_for_input("Please enter a board size. e.g. enter 5 for 5x5 board")
+        raise ArgumentError.new("Invalid Input!") if (board_size_num_input.to_i.to_s != board_size_num_input || board_size_num_input.to_i < 3)
+      rescue ArgumentError => e
+        puts e.message.colorize(:red)
+        puts "You entered #{board_size_num_input}. Please eneter a numeric value greater than 2"
+        retry
       end
-      
-      @board = Board.new(size.to_i)
-    else
-      @board = Board.new
     end
+    
+    board_size_num_input ||= 3
+    
+    @board = Board.new(board_size_num_input.to_i)
   end
   
   
