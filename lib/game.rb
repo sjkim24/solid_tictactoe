@@ -30,7 +30,7 @@ class Game
   
   def setup_board_size
     begin
-      board_size_input = Game.ask_for_input("Hello, welcome to Tic to the Tac to the Toe yo. Would you like to select a differnt board size? Default is 3x3  [y/n]")
+      board_size_input = Game.ask_for_input("Hello, welcome to Tic to the Tac to the Toe yo. Would you like to select a differnt board size? Default is 3x3  [y/n]").downcase
       raise ArgumentError.new("Invalid Input!") if (board_size_input != "y" && board_size_input != "n")
     rescue ArgumentError => e
       Game.print_error(e.message, "You entered #{board_size_input}. Please enter y or n.")
@@ -95,7 +95,7 @@ class Game
   # swap the value of @current_player between human and computer
   def change_current_player
     if @current_player == @human_player
-      @current_playerm = @computer_player
+      @current_player = @computer_player
       @prev_player = @human_player
     else
       @current_player = @human_player
@@ -116,19 +116,15 @@ class Game
   end
   
   def prompt_restart
-    puts "Would you like to restart the match? [y/n]"
-    input = gets.chomp
-    
-    until input == "y" || input == "n"
-      puts "Please enter y or n. Would you like to restart the match? [y/n]"
-      inputs = gets.chomp
+    begin
+      restart_input = Game.ask_for_input("Would you like to restart the match? [y/n]").downcase
+      raise ArgumentError.new("Invalid Input!") if (restart_input != "y" && restart_input != "n")
+    rescue ArgumentError => e
+      Game.print_error(e.message, "You entered #{restart_input}. Please enter y or n")
+      retry
     end
     
-    if input == "y"
-      self.restart_match
-    elsif input == "n"
-      puts "Thank you for playing!"
-    end
+    restart_input == "y" ? self.restart_match : (puts "Thank you for playing!")
   end
   
   def restart_match
