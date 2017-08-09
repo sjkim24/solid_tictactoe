@@ -2,6 +2,18 @@ class Game
   require "colorize"
   attr_accessor :board, :human_player, :computer_player, :current_player, :prev_player
   
+  def self.ask_for_input(message)
+    puts ""
+    puts "#{message}".colorize(:green)
+    
+    gets.chomp
+  end
+  
+  def self.print_error(message, instruction)
+    puts message.colorize(:red)
+    puts instruction
+  end
+  
   def start(reset = false)
     self.setup_board_size if !reset
     self.setup_players if !reset
@@ -16,34 +28,22 @@ class Game
     self.end_game
   end
   
-  def ask_for_input(message)
-    puts ""
-    puts "#{message}".colorize(:green)
-    
-    gets.chomp
-  end
-  
-  def print_error(message, instruction)
-    puts message.colorize(:red)
-    puts instruction
-  end
-  
   def setup_board_size
     begin
-      board_size_input = self.ask_for_input("Hello, welcome to Tic to the Tac to the Toe yo. Would you like to select a differnt board size? Default is 3x3  [y/n]")
+      board_size_input = Game.ask_for_input("Hello, welcome to Tic to the Tac to the Toe yo. Would you like to select a differnt board size? Default is 3x3  [y/n]")
       raise ArgumentError.new("Invalid Input!") if (board_size_input != "y" && board_size_input != "n")
     rescue ArgumentError => e
-      self.print_error(e.message, "You entered #{board_size_input}. Please enter y or n.")
+      Game.print_error(e.message, "You entered #{board_size_input}. Please enter y or n.")
       retry
     end
   
     
     if board_size_input == "y"
       begin
-        board_size_num_input = self.ask_for_input("Please enter a board size. e.g. enter 5 for 5x5 board")
+        board_size_num_input = Game.ask_for_input("Please enter a board size. e.g. enter 5 for 5x5 board")
         raise ArgumentError.new("Invalid Input!") if (board_size_num_input.to_i.to_s != board_size_num_input || board_size_num_input.to_i < 3)
       rescue ArgumentError => e
-        self.print_error(e.message, "You entered #{board_size_num_input}. Please eneter a numeric value greater than 2")
+        Game.print_error(e.message, "You entered #{board_size_num_input}. Please eneter a numeric value greater than 2")
         retry
       end
     end
@@ -56,22 +56,21 @@ class Game
   
   # get user's name and chice of mark
   def setup_players
-    puts "Hello! Welcome to SJ's TIC TAC TOE. What is your name?"
-    name = gets.chomp
-    puts "Do you prefer O or X?"
-    puts "Please type either O or X and press enter."
-    input = gets.chomp.downcase
+    player_name_input = Game.ask_for_input("What is your name?")
     
-    until input == "o" || input == "x"
-      puts "You have entered #{input}. Please type either O or X and press enter instead."
-      input = gets.chomp
+    begin
+      mark_pref_input = Game.ask_for_input("Do you prefer O or X? Please type either O or X and press enter.").downcase
+      raise ArgumentError.new("Invalid Input!") if (mark_pref_input != "o" && mark_pref_input != "x")
+    rescue ArgumentError => e
+      Game.print_error(e.message, "You have entered #{input}. Please type either O or X and press enter instead.")
+      retry
     end
-    
-    if input === "o"
-      @human_player = HumanPlayer.new(:o, name)
+
+    if mark_pref_input === "o"
+      @human_player = HumanPlayer.new(:o, player_name_input)
       @computer_player = ComputerPlayer.new(:x)
-    elsif input === "x"
-      @human_player = HumanPlayer.new(:x, name)
+    elsif mark_pref_input === "x"
+      @human_player = HumanPlayer.new(:x, player_name_input)
       @computer_player = ComputerPlayer.new(:o)
     end
 
@@ -96,7 +95,7 @@ class Game
   # swap the value of @current_player between human and computer
   def change_current_player
     if @current_player == @human_player
-      @current_player = @computer_player
+      @current_playerm = @computer_player
       @prev_player = @human_player
     else
       @current_player = @human_player
