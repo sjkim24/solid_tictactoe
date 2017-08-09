@@ -17,31 +17,33 @@ class Game
   end
   
   def ask_for_input(message)
+    puts ""
     puts "#{message}".colorize(:green)
     
     gets.chomp
   end
   
+  def print_error(message, instruction)
+    puts message.colorize(:red)
+    puts instruction
+  end
+  
   def setup_board_size
     begin
-      puts ""
       board_size_input = self.ask_for_input("Hello, welcome to Tic to the Tac to the Toe yo. Would you like to select a differnt board size? Default is 3x3  [y/n]")
       raise ArgumentError.new("Invalid Input!") if (board_size_input != "y" && board_size_input != "n")
     rescue ArgumentError => e
-      puts e.message.colorize(:red)
-      puts "You entered #{board_size_input}. Please enter y or n."
+      self.print_error(e.message, "You entered #{board_size_input}. Please enter y or n.")
       retry
     end
   
     
     if board_size_input == "y"
       begin
-        puts ""
         board_size_num_input = self.ask_for_input("Please enter a board size. e.g. enter 5 for 5x5 board")
         raise ArgumentError.new("Invalid Input!") if (board_size_num_input.to_i.to_s != board_size_num_input || board_size_num_input.to_i < 3)
       rescue ArgumentError => e
-        puts e.message.colorize(:red)
-        puts "You entered #{board_size_num_input}. Please eneter a numeric value greater than 2"
+        self.print_error(e.message, "You entered #{board_size_num_input}. Please eneter a numeric value greater than 2")
         retry
       end
     end
