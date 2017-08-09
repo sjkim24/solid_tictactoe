@@ -2,7 +2,7 @@ class Board
   attr_accessor :rows, :size
   
   # board size is 3 by default
-  def initialize(size = 3)
+  def initialize(size)
     @size = size
     @rows = Array.new(size) { Array.new(size) }
   end
