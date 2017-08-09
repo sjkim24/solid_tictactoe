@@ -74,7 +74,7 @@ class Game
       @computer_player = ComputerPlayer.new(:o)
     end
 
-    puts "Great! You are #{human_player.mark.to_s} and Computer is #{computer_player.mark.to_s}"
+    puts "Great! You are #{human_player.mark.to_s} and Computer is #{computer_player.mark.to_s}".colorize(:green)
   end
   
   # randomize the player to make the first move
@@ -107,9 +107,9 @@ class Game
     if @board.won?
       winning_mark = @board.winner
       winner = @current_player
-      puts "Congratulation #{@prev_player.name}. You won!"
+      puts "Congratulation #{@prev_player.name}. You won!".colorize(:blue)
     elsif @board.tied?
-      puts "Draw!"
+      puts "Draw!".colorize(:blue)
     end
     
     self.prompt_restart
@@ -124,7 +124,7 @@ class Game
       retry
     end
     
-    restart_input == "y" ? self.restart_match : (puts "Thank you for playing!")
+    restart_input == "y" ? self.restart_match : (puts "Thank you for playing!".colorize(:blue))
   end
   
   def restart_match
