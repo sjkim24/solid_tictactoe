@@ -13,13 +13,13 @@ class HumanPlayer < Player
   end
   
   def place_mark(board)
-    puts "Please enter the coordinates (each between 0-2) you want to mark. e.g. 0,0 for top left corner."
-    row_coord, col_coord = gets.chomp.split(",")
-    
-    until HumanPlayer.valid_coord?(board.size, row_coord, col_coord) && board.empty?([row_coord.to_i, col_coord.to_i])
-      puts "Please enter an unoccupied coordinates (each between 0-#{board.size - 1}) you want to mark. e.g. 0,0 for top left corner."
-      puts "Also, coordinates must be between 0 and #{board.size - 1}"
-      row_coord, col_coord = gets.chomp.split(",")
+    begin
+      coord_input = Game.ask_for_input("Please enter the coordinates (each between 0-#{board.size - 1}) you want to mark. e.g. 0,0 for top left corner.")
+      row_coord, col_coord = coord_input.split(",")
+      raise ArgumentError.new("Invalid Input") if !(HumanPlayer.valid_coord?(board.size, row_coord, col_coord) && board.empty?([row_coord.to_i, col_coord.to_i]))
+    rescue ArgumentError => e
+      Game.print_error(e.message, "Please enter an unoccupied coordinates (each between 0-#{board.size - 1}) you want to mark. e.g. 0,0 for top left corner.")
+      retry
     end
 
     board[[row_coord.to_i, col_coord.to_i]] = @mark

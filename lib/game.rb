@@ -62,7 +62,7 @@ class Game
       mark_pref_input = Game.ask_for_input("Do you prefer O or X? Please type either O or X and press enter.").downcase
       raise ArgumentError.new("Invalid Input!") if (mark_pref_input != "o" && mark_pref_input != "x")
     rescue ArgumentError => e
-      Game.print_error(e.message, "You have entered #{input}. Please type either O or X and press enter instead.")
+      Game.print_error(e.message, "You have entered #{mark_pref_input}. Please type either O or X and press enter instead.")
       retry
     end
 
