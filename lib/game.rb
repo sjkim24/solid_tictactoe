@@ -80,8 +80,8 @@ class Game
   # randomize the player to make the first move
   def randomize_order
     puts "Randomly selecting the player to make the first move..."
-    @current_player = [@human_player, @computer_player].shuffle[0]
-    
+    players = [@human_player, @computer_player].shuffle
+    @current_player, @prev_player = players[0], players[1]
     puts "#{@current_player.name} will be going first... Let the game begin!"
   end
   
@@ -94,19 +94,11 @@ class Game
   
   # swap the value of @current_player between human and computer
   def change_current_player
-    if @current_player == @human_player
-      @current_player = @computer_player
-      @prev_player = @human_player
-    else
-      @current_player = @human_player
-      @prev_player = @computer_player
-    end
+    @current_player, @prev_player = @prev_player, @current_player
   end
   
   def end_game
     if @board.won?
-      winning_mark = @board.winner
-      winner = @current_player
       puts "Congratulation #{@prev_player.name}. You won!".colorize(:blue)
     elsif @board.tied?
       puts "Draw!".colorize(:blue)
